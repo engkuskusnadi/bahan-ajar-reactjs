@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kasir Jalan: Belajar React Router, Context & useEffect</title>
+<style>
+:root{--bg:#f6f3ec;--card:#fffdf8;--ink:#1d2a24;--mut:#5d6b64;--ln:#d9d3c3;--ac:#1f7a4d;--ac2:#e0a526;--bad:#b3392f;--code:#1d2a24;--codet:#e8f3ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121a16;--card:#1a251f;--ink:#e8efe9;--mut:#9fb0a6;--ln:#2e3d34;--ac:#4cc58a;--ac2:#f0bb44;--bad:#ef7b70;--code:#0b100d;--codet:#cfe9da;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Georgia,"Times New Roman",serif}
+h1,h2,h3,button,nav,.ui{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:14px 16px 6px;display:flex;justify-content:space-between;align-items:center;gap:8px;max-width:860px;margin:auto}
+header b{font-size:18px;font-family:system-ui,sans-serif}.xp{background:var(--ac2);color:#1d1a0b;padding:3px 10px;border-radius:99px;font:600 13px system-ui}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 12px;border-bottom:1px solid var(--ln);max-width:860px;margin:auto}
+nav button{flex:none;border:1px solid var(--ln);background:var(--card);color:var(--ink);padding:7px 12px;border-radius:99px;font-size:14px;cursor:pointer}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{max-width:860px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:16px;margin:0 0 14px}
+h2{margin:.2em 0 .5em;font-size:24px}h3{margin:.2em 0 .4em;font-size:17px}
+.btn{background:var(--ac);color:#fff;border:0;padding:9px 16px;border-radius:8px;font:600 15px system-ui;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
+pre{background:var(--code);color:var(--codet);padding:12px;border-radius:8px;overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:8px 0}
+.op{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border:1px solid var(--ln);background:var(--card);color:var(--ink);border-radius:8px;font:15px system-ui;cursor:pointer}
+.op.ok{border-color:var(--ac);background:rgba(31,122,77,.15)}.op.no{border-color:var(--bad);background:rgba(179,57,47,.13)}
+.fb{margin-top:8px;padding:9px 12px;border-left:4px solid var(--ac2);background:rgba(224,165,38,.13);font:14px system-ui;border-radius:4px}
+.bar{height:10px;background:var(--ln);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.bd{text-align:center;padding:12px;border:1px dashed var(--ln);border-radius:10px;opacity:.4;font:13px system-ui}.bd.on{opacity:1;border:2px solid var(--ac2);background:rgba(224,165,38,.12)}.bd s{display:block;font-size:34px;text-decoration:none}
+.sim{border:2px solid var(--ln);border-radius:10px;overflow:hidden;background:#fff;color:#111;font-family:system-ui}
+.sim .url{background:#e9e9e9;padding:6px 10px;font:13px ui-monospace,monospace;display:flex;gap:6px;align-items:center}
+.sim .pg{padding:10px 14px;min-height:110px}.sim nav{position:static;background:#f4f4f4;border:0;padding:6px 10px;max-width:none}
+.sim nav button{border-radius:4px;background:none;border:0;color:#111;padding:3px 8px}.sim nav button.on{background:none;color:#1f7a4d;font-weight:700;text-decoration:underline}
+.tile{display:inline-block;min-height:44px;padding:10px 12px;margin:4px;border:1px solid var(--ln);border-radius:8px;background:var(--card);color:var(--ink);font:14px system-ui;cursor:pointer}.tile.sel{border-color:var(--ac2);background:rgba(224,165,38,.2)}.tile.done{border-color:var(--ac);background:rgba(31,122,77,.18);cursor:default}
+input.bl{width:110px;padding:2px 6px;border:2px solid var(--ac2);border-radius:5px;font:13px ui-monospace,monospace;background:var(--card);color:var(--ink)}
+textarea{width:100%;min-height:70px;padding:8px;border:1px solid var(--ln);border-radius:8px;background:var(--card);color:var(--ink);font:15px system-ui}
+.cert{border:6px double var(--ac2);padding:24px;text-align:center;border-radius:6px;background:var(--card)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font:600 14px system-ui;z-index:9}
+@media print{header,nav,.noprint{display:none}}
+</style></head><body>
+<header><b>🧾 Kasir Jalan</b><span class="xp" id="xp"></span></header>
+<nav id="nav"></nav><main id="m"></main>
+<script>
+const $=s=>document.querySelector(s);
+let S={};try{S=JSON.parse(localStorage.getItem("kj")||"{}")}catch(e){}
+S.d=S.d||{};S.xp=S.xp||0;S.r=S.r||{};S.nama=S.nama||"";S.kelas=S.kelas||"";S.mat=S.mat||{};S.sk=S.sk||0;
+/* ISI dengan URL Web App Google Apps Script (berakhiran /exec). Jika kosong, fitur kirim nonaktif. */
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwQZlNUqoKxqgvnwdkys7D9ceuifyqYIBXQwYczy2RZNWrXfGlH5ToxUqbhVHOajN-XPw/exec";
+function save(){try{localStorage.setItem("kj",JSON.stringify(S))}catch(e){}$("#xp").textContent="⭐ "+S.xp+" XP"}
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.append(d);setTimeout(()=>d.remove(),2200)}
+function mark(k,xp,msg){const n=!S.d[k];if(n){S.d[k]=1;S.xp+=xp;toast("+"+xp+" XP "+(msg||""))}save();if(n)kirim(false)}
+function kirim(manual){if(!SHEET_URL){if(manual)toast("Alamat Google Sheet belum diisi guru");return}
+if(!S.nama){if(manual)toast("Isi nama di Beranda dulu");return}
+const p={nama:S.nama,kelas:S.kelas,waktu:new Date().toLocaleString("id-ID"),progres:pct(),xp:S.xp,skor_kuis:S.sk,selesai:TRACK.filter(t=>S.d[t[0]]).map(t=>t[1]).join(", "),r1:S.r[0]||"",r2:S.r[1]||"",r3:S.r[2]||"",r4:S.r[3]||""};
+fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)}).then(()=>{if(manual){toast("Hasil terkirim ✔");const e=$("#ks");if(e)e.innerHTML='<div class="fb">Terkirim. Jika guru belum melihat datanya, pastikan internet aktif lalu kirim ulang.</div>'}}).catch(()=>{if(manual)toast("Gagal mengirim. Cek internet.")})}
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const SEC=[["home","🏠 Beranda"],["tuj","🎯 Tujuan"],["mat","📖 Materi"],["eks","🔍 Eksplorasi"],["lab","🧪 Lab Maya"],["game","🎮 Game"],["ker","📝 Lembar Kerja"],["kuis","🧩 Kuis"],["prog","📊 Progres"],["ref","💡 Refleksi"],["bdg","🏆 Badge"]];
+let cur="home";
+function go(k){cur=k;$("#nav").innerHTML=SEC.map(s=>`<button class="${s[0]==k?"on":""}" data-k="${s[0]}">${s[1]}</button>`).join("");
+$("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.k));V[k]($("#m"));scrollTo(0,0)}
+const V={};
+const TRACK=[["mat","Materi"],["eks","Eksplorasi"],["lab","Lab Maya"],["game","Game"],["ker","Lembar Kerja"],["kuis","Kuis"],["ref","Refleksi"]];
+const pct=()=>Math.round(TRACK.filter(t=>S.d[t[0]]).length/TRACK.length*100);
+
+V.home=m=>{m.innerHTML=`<div class="card"><h2>Mengapa isi keranjang tidak hilang saat kasir pindah ke halaman Riwayat?</h2>
+<p>Bayangkan kasir di warung kopi. Pelanggan memesan, kasir membuka daftar menu, lalu membuka catatan penjualan. Pesanan tidak boleh hilang di tengah jalan. Di aplikasi POS, tiga alat React yang menjaganya: <b>React Router</b> (pindah halaman), <b>Context API</b> (keranjang bersama), dan <b>useEffect</b> (judul tab, timer, memuat data).</p>
+<p class="ui"><label>Namamu (untuk sertifikat): <input id="nm" value="${esc(S.nama)}" style="padding:7px;border:1px solid var(--ln);border-radius:6px;background:var(--card);color:var(--ink)"></label></p>
+<p class="ui"><label>Kelas: <input id="kl" value="${esc(S.kelas)}" placeholder="contoh: XI RPL 1" style="padding:7px;border:1px solid var(--ln);border-radius:6px;background:var(--card);color:var(--ink)"></label></p><button class="btn" id="st">Mulai belajar</button></div>
+<div class="card"><h3>Alur belajar</h3><p class="ui">Tujuan → Materi → Eksplorasi → Lab Maya → Game → Lembar Kerja → Kuis → Refleksi → Sertifikat. Progres tersimpan di perangkatmu.</p><div class="bar"><i style="width:${pct()}%"></i></div></div>`;
+$("#st").onclick=()=>{S.nama=$("#nm").value.trim();S.kelas=$("#kl").value.trim();save();go("tuj")}};
+
+V.tuj=m=>{m.innerHTML=`<div class="card"><h2>Setelah belajar ini, kamu mampu:</h2><ol>
+<li>Membuat aplikasi multi-halaman dengan React Router.</li><li>Membuat menu navigasi dan menandai menu yang aktif.</li><li>Membuat layout bersama dengan Outlet.</li><li>Menjalankan efek samping dengan useEffect.</li><li>Membagikan state antar komponen dengan Context API.</li><li>Menggabungkan semuanya menjadi aplikasi POS: Kasir, Produk, Riwayat.</li></ol>
+<p class="ui"><b>Kriteria berhasil:</b> skor kuis 75 atau lebih dan semua aktivitas selesai.</p></div>`;mark("tuj",5)};
+
+const MAT=[
+["Fase 1: Dasar React Router","React hanya punya satu halaman HTML. Router yang mengganti komponen sesuai alamat. path=\"*\" cocok dengan alamat apa pun yang tidak punya rute, jadi cocok untuk halaman 404.",`<BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Kasir />} />
+    <Route path="/produk" element={<Produk />} />
+    <Route path="*" element={<TidakAda />} />
+  </Routes>
+</BrowserRouter>`],
+["Fase 2: Link, NavLink, useNavigate","Jangan pakai <a href>: halaman dimuat ulang dan state hilang. NavLink tahu kapan ia aktif. Atribut end membuat menu \"/\" hanya aktif tepat di alamat itu. useNavigate pindah halaman lewat kode.",`const pindah = useNavigate();
+<NavLink to="/" end>Kasir</NavLink>
+<button onClick={() => pindah("/riwayat")}>Lihat Riwayat</button>`],
+["Fase 3: Layout dan Outlet","Header, menu, dan footer yang sama ditulis sekali di Layout. Outlet menandai tempat halaman anak tampil. Path rute anak ditulis tanpa garis miring depan.",`<Route path="/" element={<Layout />}>
+  <Route index element={<Kasir />} />
+  <Route path="produk" element={<Produk />} />
+</Route>
+// di Layout: <main><Outlet /></main>`],
+["Fase 4: useEffect","Efek samping adalah pekerjaan di luar tampilan: judul tab, timer, ambil data. Array dependensi menentukan kapan efek jalan. Fungsi pembersihan mencegah timer menumpuk.",`useEffect(() => {
+  const t = setInterval(() => setDetik(d => d + 1), 1000);
+  return () => clearInterval(t);   // pembersihan
+}, []);   // [] = sekali; [x] = saat x berubah`],
+["Fase 5: Context API","Prop drilling merepotkan saat banyak komponen butuh data yang sama. Tiga langkah: createContext, Provider, useContext. Komponen di luar Provider menerima undefined.",`const KeranjangContext = createContext();
+<KeranjangContext.Provider value={nilai}>...</KeranjangContext.Provider>
+const { jumlahItem } = useContext(KeranjangContext);`],
+["Fase 6: Mini proyek POS","Urutan pembungkus dari luar ke dalam: KeranjangProvider, router, Layout. Dengan begitu Layout dan semua halaman bisa memakai Context sekaligus Router.",`<KeranjangProvider>
+  <BrowserRouter>
+    <Routes>...</Routes>
+  </BrowserRouter>
+</KeranjangProvider>`]];
+V.mat=m=>{m.innerHTML=`<h2>Materi interaktif</h2><p class="ui">Buka tiap fase, baca, lalu tandai paham.</p>`+MAT.map((x,i)=>`<details class="card" ${i==0?"open":""}><summary class="ui"><b>${S.mat[i]?"✅ ":""}${x[0]}</b></summary><p>${esc(x[1])}</p><pre>${esc(x[2])}</pre><button class="btn alt" data-i="${i}">Saya paham</button></details>`).join("");
+m.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>{const i=+b.dataset.i,d=b.closest("details"),s=d.querySelector("summary b");S.mat[i]=1;save();toast("Paham ✔");if(!s.textContent.startsWith("✅"))s.textContent="✅ "+s.textContent;b.textContent="Sudah dipahami";const nx=d.nextElementSibling;if(nx&&nx.tagName=="DETAILS"){d.open=false;nx.open=true;nx.style.scrollMarginTop="64px";nx.scrollIntoView({behavior:"smooth",block:"start"})}if(Object.keys(S.mat).length>=6)mark("mat",20,"Materi tuntas")})};
+
+const EK=[["Efek ini jalan kapan?\n\nuseEffect(()=>{document.title='Halo'},[])",["Sekali, saat komponen pertama tampil","Setiap kali render","Setiap kali state berubah"],0,"Array kosong [] berarti efek hanya jalan sekali saat tampil pertama."],
+["Efek ini jalan kapan?\n\nuseEffect(()=>{document.title='Keranjang ('+jumlah+')'},[jumlah])",["Hanya sekali","Saat pertama tampil dan setiap jumlah berubah","Tidak pernah"],1,"Dependensi [jumlah] membuat efek ikut jalan tiap nilai jumlah berubah."],
+["Apa yang terjadi jika setInterval tidak dibersihkan saat komponen dilepas?",["Tidak ada masalah","Timer terus jalan dan menumpuk","React otomatis menghapusnya"],1,"Tanpa clearInterval, timer tetap hidup di latar dan bisa menumpuk."],
+["Di Vite (StrictMode) efek tampak jalan dua kali. Itu...",["Bug yang harus diperbaiki","Perilaku sengaja React di mode pengembangan","Karena internet lambat"],1,"StrictMode sengaja menjalankan pasang-bersihkan-pasang untuk menguji fungsi pembersihan."]];
+V.eks=m=>{let n=0,ok=0;const draw=()=>{if(n>=EK.length){mark("eks",20,"Eksplorasi selesai");m.innerHTML=`<div class="card"><h2>Selesai! ${ok}/${EK.length} tebakan benar</h2><p>Memprediksi dulu, memeriksa kemudian, adalah cara kerja programmer yang tenang.</p><button class="btn" id="u">Ulangi</button></div>`;$("#u").onclick=()=>{n=0;ok=0;draw()};return}
+const q=EK[n];m.innerHTML=`<div class="card"><h2>🔍 Tebak sebelum jalan (${n+1}/${EK.length})</h2><pre>${esc(q[0])}</pre>${q[1].map((o,i)=>`<button class="op" data-i="${i}">${esc(o)}</button>`).join("")}<div id="f"></div></div>`;
+m.querySelectorAll(".op").forEach(b=>b.onclick=()=>{if(m.dataset.l==n)return;m.dataset.l=n;const i=+b.dataset.i;if(i==q[2])ok++;b.classList.add(i==q[2]?"ok":"no");m.querySelectorAll(".op")[q[2]].classList.add("ok");$("#f").innerHTML=`<div class="fb">${i==q[2]?"Tepat! ":"Belum tepat. "}${q[3]}</div><p><button class="btn" id="nx">Lanjut</button></p>`;$("#nx").onclick=()=>{n++;draw()}})};m.dataset.l=-1;draw()};
+
+V.lab=m=>{let pg="/",mode="Link",lokal=false,cart=0,ctx=true,vis={};
+const draw=()=>{const known=["/","/produk","/riwayat"];vis[pg]=1;
+let body=pg=="/"?`<b>Kasir</b><br>Isi keranjang: ${cart} item`:pg=="/produk"?`<b>Produk</b><br>Kopi Susu Rp 18.000 <button id="add">Tambah</button>`:pg=="/riwayat"?`<b>Riwayat</b><br>Belum ada transaksi.`:`<b>404</b> Halaman tidak ditemukan`;
+m.innerHTML=`<h2>🧪 Lab maya: Router & Context</h2><div class="card"><p class="ui">Ketik alamat atau klik menu. Coba tambah produk, lalu pindah halaman. Ganti mode untuk melihat bedanya.</p>
+<p class="ui"><button class="btn ${mode=="Link"?"":"alt"}" id="m1">Pakai Link</button> <button class="btn ${mode=="a"?"":"alt"}" id="m2">Pakai &lt;a href&gt;</button> <button class="btn ${ctx?"":"alt"}" id="m3">${ctx?"State di Context":"State lokal di halaman"}</button></p>
+<div class="sim"><div class="url">🔒 localhost:5173<input id="u" value="${pg}" style="flex:1;border:1px solid #bbb;border-radius:4px;padding:2px 6px"><button id="go">Buka</button></div>
+<div style="padding:8px 14px;border-bottom:1px solid #ddd"><b>POS Sederhana</b> <span style="float:right">🛒 ${cart}</span></div>
+<nav>${[["/","Kasir"],["/produk","Produk"],["/riwayat","Riwayat"]].map(x=>`<button class="${pg==x[0]?"on":""}" data-p="${x[0]}">${x[1]}</button>`).join("")}</nav>
+<div class="pg">${body}</div><div style="padding:6px 14px;background:#f4f4f4;font-size:12px">Footer (dibuat sekali di Layout)</div></div>
+<div class="fb" id="inf">${known.includes(pg)?"Rute cocok. Layout (header, menu, footer) tidak dibuat ulang, hanya isi Outlet yang berganti.":"path=\"*\" menangkap alamat ini, dan halaman 404 tetap tampil di dalam Layout."}</div></div>`;
+const nav=p=>{if(mode=="a"){cart=0;toast("Halaman dimuat ulang: SEMUA state hilang!")}else if(!ctx&&p!=pg){cart=0;toast("State lokal hilang saat halaman ditinggalkan")}pg=p;if(Object.keys(vis).length>=3&&mode=="Link"&&ctx&&cart>0)mark("lab",25,"Lab selesai");draw()};
+m.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>nav(b.dataset.p));
+$("#go").onclick=()=>nav($("#u").value||"/");$("#m1").onclick=()=>{mode="Link";draw()};$("#m2").onclick=()=>{mode="a";draw()};$("#m3").onclick=()=>{ctx=!ctx;draw()};
+const a=$("#add");if(a)a.onclick=()=>{cart++;draw()}};draw()};
+
+const PR=[["BrowserRouter","mengaktifkan routing"],["Route","memetakan path ke komponen"],["NavLink","tautan yang tahu kapan aktif"],["useNavigate","pindah halaman lewat kode"],["Outlet","tempat rute anak tampil"],["createContext","membuat saluran data bersama"],["useEffect","menjalankan efek samping"],["Provider","menyediakan value ke komponen di dalamnya"]];
+V.game=m=>{let a=null,done={},salah=0;const draw=()=>{const R=[...PR.keys()];const L=R.slice(),Rr=R.slice().sort((x,y)=>(x*7+3)%8-(y*7+3)%8);
+m.innerHTML=`<h2>🎮 Jodohkan istilah</h2><p class="ui">Ketuk istilah, lalu ketuk artinya. Salah: ${salah}</p><div class="card grid"><div>${L.map(i=>`<div><button class="tile ${done[i]?"done":a==i?"sel":""}" data-l="${i}" style="width:100%">${PR[i][0]}</button></div>`).join("")}</div><div>${Rr.map(i=>`<div><button class="tile ${done[i]?"done":""}" data-r="${i}" style="width:100%">${PR[i][1]}</button></div>`).join("")}</div></div><div id="f"></div>`;
+m.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{if(!done[b.dataset.l]){a=+b.dataset.l;draw()}});
+m.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const r=+b.dataset.r;if(a==null||done[r])return;if(a==r){done[r]=1;a=null;if(Object.keys(done).length==8){mark("game",25,"Game tuntas");draw();$("#f").innerHTML=`<div class="fb">Semua cocok! Salah ${salah} kali.</div>`;return}}else{salah++;toast("Belum cocok, coba lagi");a=null}draw()})};draw()};
+
+const KER=[["Bungkus semua halaman dengan layout bersama:","<Route path=\"/\" element={<","/>}>","layout"],["Tandai tempat halaman anak tampil di Layout:","<main><","/></main>","outlet"],["Ambil fungsi pindah halaman:","const pindah = ","();","usenavigate"],["Efek judul tab yang jalan saat jumlah berubah:","useEffect(() => { document.title = jumlah }, [","]);","jumlah"]];
+V.ker=m=>{m.innerHTML=`<h2>📝 Lembar kerja: lengkapi kode</h2><p class="ui">Isi bagian kosong, lalu periksa. Huruf besar-kecil tidak berpengaruh.</p><div class="card">`+KER.map((k,i)=>`<p class="ui">${i+1}. ${k[0]}</p><pre>${esc(k[1])}<input class="bl" id="b${i}" autocomplete="off" autocapitalize="off">${esc(k[2])}</pre>`).join("")+`<button class="btn" id="ck">Periksa jawaban</button><div id="f"></div></div>`;
+$("#ck").onclick=()=>{let ok=0,t="";KER.forEach((k,i)=>{const v=$("#b"+i).value.trim().toLowerCase().replace(/[<>\/ ()]/g,"");const g=v==k[3];if(g)ok++;$("#b"+i).style.borderColor=g?"var(--ac)":"var(--bad)";if(!g)t+=`<br>No. ${i+1}: petunjuknya "${k[3].length} huruf, diawali ${k[3][0]}".`});
+$("#f").innerHTML=`<div class="fb">Benar ${ok} dari ${KER.length}.${t}</div>`;if(ok==KER.length)mark("ker",25,"Lembar kerja tuntas")}};
+
+const QZ=[[1,"Komponen yang mengaktifkan routing adalah...",["BrowserRouter","Outlet","useEffect"],0,"BrowserRouter (atau HashRouter) adalah pembungkus yang mengaktifkan routing."],
+[1,"path=\"*\" biasa dipakai untuk...",["Halaman utama","Halaman 404","Footer"],1,"Tanda * cocok dengan alamat apa pun yang tidak punya rute."],
+[1,"Hook untuk berbagi data tanpa prop drilling adalah...",["useContext","useNavigate","useRef"],0,"useContext membaca value dari Provider."],
+[2,"Mengapa tidak memakai <a href> untuk pindah halaman React?",["Lebih lambat","Halaman dimuat ulang dan state hilang","Tidak ada tag a di React"],1,"Muat ulang membuang semua state di memori."],
+[2,"Atribut end pada <NavLink to=\"/\"> berguna agar...",["Link menghilang","Menu aktif hanya tepat di alamat /","Halaman berhenti memuat"],1,"Tanpa end, \"/\" cocok dengan semua alamat dan selalu tampil aktif."],
+[2,"Path rute anak di dalam Layout ditulis...",["\"/produk\"","\"produk\"","\"//produk\""],1,"Rute anak ditulis tanpa garis miring depan; alamat lengkapnya tetap /produk."],
+[2,"Fungsi pembersihan useEffect berguna untuk...",["Mempercepat render","Menghentikan timer saat komponen dilepas","Menghapus state"],1,"clearInterval/clearTimeout mencegah timer menumpuk."],
+[3,"Error \"Cannot destructure ... of useContext(...) as it is undefined\" artinya...",["Router salah","Komponen di luar Provider","Path salah"],1,"Komponen di luar Provider menerima undefined. Naikkan Provider ke tingkat lebih atas."],
+[3,"Urutan pembungkus yang benar dari luar ke dalam:",["Router, Provider, Layout","Provider, Router, Layout","Layout, Provider, Router"],1,"Provider di luar router agar Layout dan semua halaman bisa memakai Context dan Router."],
+[3,"Mengapa if (loading) return ... harus ditulis setelah semua hook?",["Estetika","Hook tidak boleh berada di bawah return bersyarat","Agar lebih cepat"],1,"Hook harus dipanggil dengan urutan sama di setiap render."],
+[3,"Setelah Refresh browser, keranjang di Context kosong karena...",["Bug React","Data hanya hidup di memori; perlu localStorage atau server","Router menghapusnya"],1,"Context hanya menyimpan di memori. localStorage dengan useEffect [riwayat] adalah tantangan Latihan 6."]];
+V.kuis=m=>{let lv=1,n=0,sk=0,used=[],hist=[];const next=()=>{if(n>=8){const sc=Math.round(sk/8*100);S.sk=Math.max(S.sk,sc);save();kirim(false);if(sc>=75)mark("kuis",40,"Lulus kuis");else S.d.kuis=S.d.kuis;
+m.innerHTML=`<div class="card"><h2>Skor akhir: ${sc}</h2><p>${sc>=75?"Tuntas! Kamu mencapai kriteria 75.":"Belum 75. Buka lagi Materi lalu ulangi."}</p><p class="ui">Tingkat terakhir: ${lv} dari 3</p><button class="btn" id="u">Ulangi kuis</button></div>`;$("#u").onclick=()=>V.kuis(m);return}
+let pool=QZ.map((q,i)=>i).filter(i=>!used.includes(i));let ch=pool.filter(i=>QZ[i][0]==lv);if(!ch.length)ch=pool.sort((a,b)=>Math.abs(QZ[a][0]-lv)-Math.abs(QZ[b][0]-lv)).slice(0,1);const id=ch[0];used.push(id);const q=QZ[id];
+m.innerHTML=`<div class="card"><p class="ui">Soal ${n+1}/8 | Tingkat ${"★".repeat(lv)}${"☆".repeat(3-lv)} | Benar ${sk}</p><h3>${esc(q[1])}</h3>${q[2].map((o,i)=>`<button class="op" data-i="${i}">${esc(o)}</button>`).join("")}<div id="f"></div></div>`;
+let lock=0;m.querySelectorAll(".op").forEach(b=>b.onclick=()=>{if(lock)return;lock=1;const i=+b.dataset.i,g=i==q[3];if(g){sk++;lv=Math.min(3,lv+1)}else lv=Math.max(1,lv-1);b.classList.add(g?"ok":"no");m.querySelectorAll(".op")[q[3]].classList.add("ok");$("#f").innerHTML=`<div class="fb">${g?"Benar! Soal berikutnya lebih menantang. ":"Belum tepat. Soal berikutnya disesuaikan. "}${q[4]}</div><p><button class="btn" id="nx">Lanjut</button></p>`;$("#nx").onclick=()=>{n++;next()}})};next()};
+
+V.prog=m=>{m.innerHTML=`<h2>📊 Progres belajar</h2><div class="card"><h3>${pct()}% selesai</h3><div class="bar"><i style="width:${pct()}%"></i></div></div><div class="card">${TRACK.map(t=>`<p class="ui">${S.d[t[0]]?"✅":"⬜"} ${t[1]}</p>`).join("")}<p class="ui">Skor kuis terbaik: <b>${S.sk}</b> | Total XP: <b>${S.xp}</b></p><p><button class="btn" id="kr">Kirim hasil ke guru</button></p><div id="ks"></div></div>`;$("#kr").onclick=()=>kirim(true)};
+
+const RF=["Apa keuntungan memakai Layout dan Outlet dibanding menulis header dan menu di setiap halaman?","Kapan state sebaiknya di Context, dan kapan cukup state lokal?","Mengapa timer di dalam useEffect perlu fungsi pembersihan?","Bagian mana yang paling sulit dan bagaimana kamu mengatasinya?"];
+V.ref=m=>{m.innerHTML=`<h2>💡 Refleksi</h2><div class="card">`+RF.map((q,i)=>`<p class="ui"><b>${q}</b></p><textarea id="r${i}">${esc(S.r[i]||"")}</textarea>`).join("")+`<p><button class="btn" id="sv">Simpan refleksi</button></p></div>`;
+$("#sv").onclick=()=>{let c=0;RF.forEach((q,i)=>{S.r[i]=$("#r"+i).value;if(S.r[i].trim().length>=15)c++});save();if(c>=3)mark("ref",20,"Refleksi tersimpan");else toast("Isi minimal 3 jawaban (15 huruf lebih)")}};
+
+const BD=[["🧭","Navigator","Tuntaskan Materi","mat"],["⚡","Master Efek","Selesaikan Eksplorasi","eks"],["🧱","Arsitek Layout","Selesaikan Lab Maya","lab"],["🧠","Pahlawan Context","Menangkan Game","game"],["🛠️","Koder Teliti","Tuntaskan Lembar Kerja","ker"],["🎯","Penembak Jitu","Skor kuis 75+","kuis"],["💡","Reflektor","Isi Refleksi","ref"]];
+V.bdg=m=>{const all=TRACK.every(t=>S.d[t[0]]);m.innerHTML=`<h2>🏆 Badge & sertifikat</h2><div class="grid">${BD.map(b=>`<div class="bd ${S.d[b[3]]?"on":""}"><s>${b[0]}</s><b>${b[1]}</b><br>${b[2]}</div>`).join("")}</div><h3 style="margin-top:18px">Sertifikat</h3>`+(all?`<div class="cert"><div style="font-size:42px">🏆</div><h2>Sertifikat Penyelesaian</h2><p>diberikan kepada</p><h2 style="color:var(--ac)">${esc(S.nama||"Peserta Didik")}</h2><p>yang menuntaskan praktikum<br><b>React Router, Layout, Context API, dan useEffect</b><br>Studi kasus POS | Skor kuis ${S.sk} | ${S.xp} XP</p><small>${new Date().toLocaleDateString("id-ID",{dateStyle:"long"})}</small></div><p class="noprint"><button class="btn" onclick="print()">Cetak / simpan PDF</button></p>`:`<div class="card">Selesaikan semua aktivitas (progres ${pct()}%) untuk membuka sertifikat.</div>`)};
+save();go("home");
+</script></body></html>
